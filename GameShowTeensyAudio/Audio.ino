@@ -3,7 +3,7 @@
 // https://www.pjrc.com/teensy/td_libs_Audio.html
 // cut down to play only one sound
 
-#include <TeensyAudio.h>
+#include <Audio.h>
 #include "AudioSampleBrentonring.h"
 
 // global variables
@@ -28,11 +28,6 @@ void AudioInit()
   
  // reduce the gain on mixer channels, so more than 1
   // sound can play simultaneously without clipping
-//  mix1.gain(0, 0.7);
-//  mix1.gain(1, 0.7);
-//  mix1.gain(2, 0.7);
-//  mix1.gain(3, 0.4);
-//  mix2.gain(1, 0.4);
 
   playOneSound(); // make sound
     
@@ -73,13 +68,13 @@ void AudioPlayer2()
 void playOneSound()
 {
   int count=0;
-  delay(100);
+//  delay(100);
   playMemSound.play(AudioSampleBrentonRing);
-  delay(50);
-  while (playMemSound.isPlaying())
-  {
-    count++;
-    delay(100);
-  }
+  delay(500);
+//  while (playMemSound.isPlaying())
+//  {
+//    count++;
+//    delay(50);
+//  }
   Serial.printf("Played sound %d counts\n", count);
 }
