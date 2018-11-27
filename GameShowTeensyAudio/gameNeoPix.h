@@ -11,7 +11,8 @@
 #define GAME_PIXEL 1
 #define DAZZLE_PIXEL 0
 
-#define RING_LENGTH 16
+#define RING_LENGTH1 16
+#define RING_LENGTH2 12
 #define BRIGHTNESS 100
 
 // Three Strips, two Rings, 3 Modes

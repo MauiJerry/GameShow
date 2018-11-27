@@ -30,10 +30,10 @@
 //   NEO_KHZ400  400 KHz (classic 'v1' (not v2) FLORA pixels, WS2811 drivers)
 //   NEO_GRB     Pixels are wired for GRB bitstream (most NeoPixel products)
 //   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
-NeoStrip player1Strip = NeoStrip(RING_LENGTH, PLAYER1_RING_PIN, NEO_GRB + NEO_KHZ800);
-NeoStrip player2Strip = NeoStrip(RING_LENGTH, PLAYER2_RING_PIN, NEO_RGB + NEO_KHZ800);
-NeoWindow player1Ring  = NeoWindow(&player1Strip, 0, RING_LENGTH);
-NeoWindow player2Ring  = NeoWindow(&player2Strip, 0, 12);//RING_LENGTH);
+NeoStrip player1Strip = NeoStrip(RING_LENGTH1, PLAYER1_RING_PIN, NEO_GRB + NEO_KHZ800);
+NeoStrip player2Strip = NeoStrip(RING_LENGTH2, PLAYER2_RING_PIN, NEO_RGB + NEO_KHZ800);
+NeoWindow player1Ring  = NeoWindow(&player1Strip, 0, RING_LENGTH1);
+NeoWindow player2Ring  = NeoWindow(&player2Strip, 0, RING_LENGTH2);//RING_LENGTH);
 
 #define STRIP_TYPE NEO_GRBW
 // using rgb+w strip from adafruit which should be RGBW
@@ -92,7 +92,7 @@ void setAllBrightness(int brightness)
 }
 void setAllWindowsNoEfx()
 {
-    player1Ring.setNoEfx();
+  player1Ring.setNoEfx();
   player2Ring.setNoEfx();
   rightWindow.setNoEfx();
   leftWindow.setNoEfx();
@@ -181,7 +181,7 @@ void  startupBlinks()
 {
   Serial.println("Startup Mode Blinks Begin");
   
-  for (int i =0; i< 3; i++)
+  for (int i =0; i< 2; i++)
   {
     Serial.println("AllOn");
     allOn();
@@ -211,7 +211,7 @@ void rampModePixels()
  modePixels.setPixelColor(GAME_PIXEL, modePixels.Color(0,testModeColor,0));
  modePixels.setPixelColor(DAZZLE_PIXEL, modePixels.Color(0,0,testModeColor));
  modePixels.show();
- delay(1000);
+ delay(500);
  if (testModeDirection) {
   testModeColor++;
   if (testModeColor >255) {

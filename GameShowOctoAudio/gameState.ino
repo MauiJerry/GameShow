@@ -21,7 +21,7 @@ void setQuietState()
   // Top, Left, Right strips in very slow dazzle
   AudioQuietState();
   
-  setAllBrightness(10);
+  octo.setBrightness(10);
   // long strips in slow dazzle
 
   topFullWindow.setDazzleEfx( slowDazzleTime, 50, 600);
@@ -38,9 +38,9 @@ void setQuietState()
   player2Ring.setDazzleEfx( slowDazzleTime, 50, 600);
 
   // control buttons Quiet= full color
-  modePixels.setPixelColor(QUIET_PIXEL,  modePixels.Color(255,0,0));
-  modePixels.setPixelColor(GAME_PIXEL,   modePixels.Color(0,0,0));
-  modePixels.setPixelColor(DAZZLE_PIXEL, modePixels.Color(0,0,0));
+  modePixels.setPixelColor(QUIET_PIXEL,  octo.Color(255,0,0));
+  modePixels.setPixelColor(GAME_PIXEL,   octo.Color(0,0,0));
+  modePixels.setPixelColor(DAZZLE_PIXEL, octo.Color(0,0,0));
 }
 
 void setPlayState()
@@ -51,10 +51,10 @@ void setPlayState()
   // Top, Left, Right strips in very slow dazzle
   AudioPlayState();
 
-  setAllBrightness(BRIGHTNESS);
+  octo.setBrightness(BRIGHTNESS);
   // long strips in slow dazzle
 //  int dazzleTime = 2000;
-//    setAllBrightness(100);
+//    octo.setBrightness(100);
   topFullWindow.setFadeEfx(0, BLUE, 100, topFullWindow.fadeTypeCycle, 600);
   topLeftWindow.setNoEfx();
   topRightWindow.setNoEfx();
@@ -70,9 +70,9 @@ void setPlayState()
   player2Ring.setDazzleEfx( slowDazzleTime, 50, 600);
 
   // control buttons Quiet= full color
-  modePixels.setPixelColor(QUIET_PIXEL,  modePixels.Color(0,0,0));
-  modePixels.setPixelColor(GAME_PIXEL,   modePixels.Color(0,255,0));
-  modePixels.setPixelColor(DAZZLE_PIXEL, modePixels.Color(0,0,0));
+  modePixels.setPixelColor(QUIET_PIXEL,  octo.Color(0,0,0));
+  modePixels.setPixelColor(GAME_PIXEL,   octo.Color(0,255,0));
+  modePixels.setPixelColor(DAZZLE_PIXEL, octo.Color(0,0,0));
 }
 
 void setLeftState()
@@ -82,10 +82,10 @@ void setLeftState()
   // Top, Left, Right strips in very slow dazzle
 AudioPlayer1();
 
-  setAllBrightness(BRIGHTNESS);
+  octo.setBrightness(BRIGHTNESS);
   // long strips in slow dazzle
 //  int dazzleTime = 2000;
-//    setAllBrightness(100);
+//    octo.setBrightness(100);
   topFullWindow.setNoEfx();
   topFullWindow.fillBlack();
 //  topLeftWindow.setWipeEfx(RED, 30,600);
@@ -102,9 +102,9 @@ AudioPlayer1();
   player2Ring.setSolidColorEfx(0, 5000);
 
   // control buttons Quiet= full color
-  modePixels.setPixelColor(QUIET_PIXEL,  modePixels.Color(0,0,0));
-  modePixels.setPixelColor(GAME_PIXEL,   modePixels.Color(0,255,0));
-  modePixels.setPixelColor(DAZZLE_PIXEL, modePixels.Color(0,0,0));
+  modePixels.setPixelColor(QUIET_PIXEL,  octo.Color(0,0,0));
+  modePixels.setPixelColor(GAME_PIXEL,   octo.Color(0,255,0));
+  modePixels.setPixelColor(DAZZLE_PIXEL, octo.Color(0,0,0));
 
 }
 
@@ -115,10 +115,10 @@ void setRightState()
   // Top, Left, Right strips in very slow dazzle
 AudioPlayer2();
 
-  setAllBrightness(BRIGHTNESS);
+  octo.setBrightness(BRIGHTNESS);
   // long strips in slow dazzle
 //  int dazzleTime = 2000;
-//    setAllBrightness(100);
+//    octo.setBrightness(100);
   topFullWindow.setNoEfx();
   topFullWindow.fillBlack();
   topLeftWindow.setNoEfx();
@@ -136,9 +136,9 @@ AudioPlayer2();
 //  player2Ring.setBlinkEfx(GREEN, 600);
 
   // control buttons Quiet= full color
-  modePixels.setPixelColor(QUIET_PIXEL,  modePixels.Color(0,0,0));
-  modePixels.setPixelColor(GAME_PIXEL,   modePixels.Color(0,255,0));
-  modePixels.setPixelColor(DAZZLE_PIXEL, modePixels.Color(0,0,0));
+  modePixels.setPixelColor(QUIET_PIXEL,  octo.Color(0,0,0));
+  modePixels.setPixelColor(GAME_PIXEL,   octo.Color(0,255,0));
+  modePixels.setPixelColor(DAZZLE_PIXEL, octo.Color(0,0,0));
 }
 
 void setDazzleState()
@@ -147,9 +147,9 @@ void setDazzleState()
     gameState = DazzleState;
   // Top, Left, Right strips in very slow dazzle
 
-AudioDazzle();
+  AudioDazzle();
 
-setAllBrightness(100);
+  octo.setBrightness(100);
 
   topFullWindow.setDazzleEfx( dazzleTime, dazzelPercent, 50);
   topLeftWindow.setNoEfx();
@@ -162,9 +162,9 @@ setAllBrightness(100);
   player2Ring.setDazzleEfx( dazzleTime, dazzelPercent, 50); // fade between two colors
 
   // control buttons 
-  modePixels.setPixelColor(QUIET_PIXEL,  modePixels.Color(0,0,0));
-  modePixels.setPixelColor(GAME_PIXEL,   modePixels.Color(0,0,0));
-  modePixels.setPixelColor(DAZZLE_PIXEL, modePixels.Color(0,0,255));
+  modePixels.setPixelColor(QUIET_PIXEL,  octo.Color(0,0,0));
+  modePixels.setPixelColor(GAME_PIXEL,   octo.Color(0,0,0));
+  modePixels.setPixelColor(DAZZLE_PIXEL, octo.Color(0,0,255));
 }
 
 void checkWindowsDone()
