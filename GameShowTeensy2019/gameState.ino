@@ -79,10 +79,10 @@ void setPlayState()
 
 void setLeftState()
 {
-  Serial.println("Left GameState");
+  Serial.println("Left GameState ");
   gameState = LeftState;
   // Top, Left, Right strips in very slow dazzle
-AudioPlayer1();
+  AudioPlayer1();
 
   setAllBrightness(BRIGHTNESS);
   // long strips in slow dazzle
