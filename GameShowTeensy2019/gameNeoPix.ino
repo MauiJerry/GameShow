@@ -2,23 +2,21 @@
 //////////////////
 
 // NeoPixel Strips
-// player rings and single LED on RJ1 (with their single leds)
-// 2ring and 3 mode LEDs on RJ1 (with 3 mode leds)
+// player rings on RJ1
 #define PLAYER1_RING_PIN 7
 #define PLAYER2_RING_PIN 2
 
-#define MODE_PIX_PIN 8
-
 // top, left, right strips on RJ2
 #define TOP_STRIP_PIN 5
-#define LEFT_STRIP_PIN 6
-#define RIGHT_STRIP_PIN 21
+#define LEFT_STRIP_PIN 21
+#define RIGHT_STRIP_PIN 6 
 
+//#define TOP_STRIP_LEN 64
 #define TOP_STRIP_LEN 86
+#define TOP_RIGHT_START 0
+#define TOP_RIGHT_LEN (TOP_STRIP_LEN/2)
 #define TOP_LEFT_START TOP_RIGHT_LEN
 #define TOP_LEFT_LEN  43
-#define TOP_RIGHT_START 0
-#define TOP_RIGHT_LEN 43
 
 #define LEFT_STRIP_LEN 60
 #define RIGHT_STRIP_LEN LEFT_STRIP_LEN
@@ -36,7 +34,7 @@ NeoStrip player2Strip = NeoStrip(RING_LENGTH2, PLAYER2_RING_PIN, NEO_RGB + NEO_K
 NeoWindow player1Ring  = NeoWindow(&player1Strip, 0, RING_LENGTH1);
 NeoWindow player2Ring  = NeoWindow(&player2Strip, 0, RING_LENGTH2);//RING_LENGTH);
 
-#define STRIP_TYPE (NEO_GRBW+ NEO_KHZ800)
+#define STRIP_TYPE (NEO_GRB+ NEO_KHZ800)
 // using rgb+w strip from adafruit which should be RGBW
 // however the uberGuide says some may be GRBW
 NeoStrip topStrip = NeoStrip(TOP_STRIP_LEN, TOP_STRIP_PIN, STRIP_TYPE );
@@ -84,6 +82,8 @@ void setupNeoPix()
 
 void setupModePixels()
 {
+  Serial.println("setupModePixels");
+
   pinMode(QUIET_PIXEL_PIN, OUTPUT);
   pinMode(GAME_PIXEL_PIN, OUTPUT);
   pinMode(DAZZLE_PIXEL_PIN, OUTPUT);
@@ -97,10 +97,11 @@ void setAllBrightness(int brightness)
     topStrip.setBrightness(brightness);
     leftStrip.setBrightness(brightness);
     rightStrip.setBrightness(brightness);
-    //modePixels.setBrightness(brightness);
 }
+
 void setAllWindowsNoEfx()
 {
+  Serial.println("setAllWindowsNoEfx");
   player1Ring.setNoEfx();
   player2Ring.setNoEfx();
   rightWindow.setNoEfx();
@@ -112,7 +113,7 @@ void setAllWindowsNoEfx()
 
 void modePixOn()
 {
-//  Serial.println("Mode Pix On");
+  Serial.println("Mode Pix On");
 
     digitalWrite(QUIET_PIXEL_PIN, HIGH);
     digitalWrite(GAME_PIXEL_PIN, HIGH);
@@ -175,6 +176,7 @@ void showStrips()
 
 void allStripOn()
 {
+  Serial.println("allStripOn");
   int maxOn = 100;
   topStrip.fillStrip( topStrip.Color   (0, 0, 0, maxOn));
   leftStrip.fillStrip(leftStrip.Color  (maxOn, maxOn,0));//randomColor());
@@ -186,6 +188,7 @@ void allStripOn()
 
 void allStripOff()
 {
+  Serial.println("allStripOff");
   topStrip.clearStrip();
   leftStrip.clearStrip();
   rightStrip.clearStrip();
@@ -255,7 +258,6 @@ void  showAllStrip()
   rightStrip.show();
   player1Strip.show();
   player2Strip.show();
-//  modePixels.show();
 }
 
 int dazzleTime = 60;
@@ -266,6 +268,7 @@ int fastDazzleTime = 50;
 
 void  setQuietNeoEfx()
 {
+  Serial.println("setQuietNeoEfx");
   topFullWindow.setDazzleEfx( slowDazzleTime, 50, 600);
   topLeftWindow.setNoEfx();
   topRightWindow.setNoEfx();
@@ -286,21 +289,28 @@ void  setQuietNeoEfx()
 void setGameNeoEfx()
 {
   Serial.println("setGameNeoEfx");
+  
   setAllBrightness(BRIGHTNESS);
   // long strips in slow dazzle
 //  int dazzleTime = 2000;
 //    setAllBrightness(100);
+  topFullWindow.fillBlack();
+  leftWindow.fillBlack();
+  rightWindow.fillBlack();
+  
+//  topFullWindow.setSolidColorEfx(RED, 5000);
+//  leftWindow.setSolidColorEfx(GREEN, 5000);
+//  rightWindow.setSolidColorEfx(BLUE, 5000);
+  
+  topFullWindow.fillBlack();
   topFullWindow.setFadeEfx(0, BLUE, 100, topFullWindow.fadeTypeCycle, 600);
   topLeftWindow.setNoEfx();
   topRightWindow.setNoEfx();
-  leftWindow.setFadeEfx(0, BLUE, 100, topFullWindow.fadeTypeCycle, 600);
-  rightWindow.setFadeEfx(0, BLUE, 100, topFullWindow.fadeTypeCycle, 600);
   
-  // player buttons solid color
-//  player1Ring.setMultiSparkleEfx(RED, 50, 50, player1Ring.getNumPixels()/2, 0); // fade between two colors
-//  player2Ring.setMultiSparkleEfx(BLUE, 50, 50, player2Ring.getNumPixels()/2, 0); // fade between two colors
-//  player1Ring.setSolidColorEfx(0, 600); 
-//  player2Ring.setSolidColorEfx(0, 600); 
+  leftWindow.setFadeEfx(0, BLUE, 100, leftWindow.fadeTypeCycle, 600);
+  rightWindow.setFadeEfx(0, BLUE, 100, rightWindow.fadeTypeCycle, 600);
+  
+  // player buttons slow Dazzle
   player1Ring.setDazzleEfx( slowDazzleTime, 50, 600);
   player2Ring.setDazzleEfx( slowDazzleTime, 50, 600);
 
@@ -316,17 +326,17 @@ void  setLeftNeoEfx()
   topFullWindow.fillBlack();
   topFullWindow.setNoEfx();
   
-//  topLeftWindow.setWipeEfx(RED, 30,600);
-//  topLeftWindow.setSolidColorEfx(GREEN, 600);
-//  topRightWindow.setSolidColorEfx(RED, 600);
-
   topLeftWindow.setDazzleEfx( dazzleTime, dazzelPercent, 50);
+  
   //topRightWindow.setSolidColorEfx(BLACK, 600);
-//  topRightWindow.fillBlack();
   topRightWindow.setNoEfx();
 
-  topLeftWindow.printData();
-  topRightWindow.printData();
+  leftWindow.setDazzleEfx( dazzleTime, dazzelPercent, 50);
+  rightWindow.fillBlack();
+  rightWindow.setNoEfx();
+
+//  topLeftWindow.printData();
+//  topRightWindow.printData();
     
   // player buttons solid color
   player1Ring.setDazzleEfx( dazzleTime, dazzelPercent, 75);//setBlinkEfx(RED, 100, 0); 
@@ -351,11 +361,9 @@ void  setRightNeoEfx()
   topLeftWindow.setNoEfx();
   topRightWindow.setDazzleEfx( dazzleTime, dazzelPercent, 50);
 
-  topLeftWindow.printData();
-  topRightWindow.printData();
-
-  leftWindow.setNoEfx();
+  leftWindow.setSolidColorEfx(0, 5000);
   leftWindow.fillBlack();
+  
   rightWindow.setDazzleEfx( dazzleTime, dazzelPercent, 50);
 //  rightWindow.setReverseWipeEfx(color, 30,600);
 //  rightWindow.setBlinkEfx(GREEN, 100, 0);
@@ -377,6 +385,7 @@ void  setDazzleNeoEfx()
   topFullWindow.setDazzleEfx( dazzleTime, dazzelPercent, 50);
   topLeftWindow.setNoEfx();
   topRightWindow.setNoEfx();
+  
   leftWindow.setDazzleEfx( dazzleTime, dazzelPercent, 50);
   rightWindow.setDazzleEfx( dazzleTime, dazzelPercent, 50);
   
@@ -390,6 +399,7 @@ void  setDazzleNeoEfx()
 
 void leftRightSolid()
 {
+  Serial.println("leftRightSolid");
   topFullWindow.fillBlack();
   topRightWindow.fillColor(RED);
   topLeftWindow.fillColor(GREEN);

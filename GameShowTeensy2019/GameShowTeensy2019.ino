@@ -1,5 +1,5 @@
 /*
- * GameShowTeensyAudio - game show using Teensy's DAC audio
+ * GameShowTeensy2019 - game show using Teensy's DAC audio
 // oct 2019 - move 3 mode buttons to individual leds
 
 //  three mode push buttons (quiet, game, dazzle)
@@ -69,7 +69,7 @@ void  TestTopHalves()
 
 void loop()
 {
-  Serial.println("Loop"); //delay(500);
+//  Serial.println("Loop"); //delay(500);
   // Basic NeoEffects loop:
   // update time
   // check inputs & effectsDone - change behavior as needed

@@ -31,6 +31,7 @@ void setPlayState()
   AudioPlayState();
 
   setGameNeoEfx();
+  Serial.println("end Play GameState");  
 }
 
 void setLeftState()
