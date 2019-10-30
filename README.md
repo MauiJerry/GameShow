@@ -20,7 +20,7 @@ Main Components:
 The large buttons have a center LED plus a neopixel ring inside (per http://www.instructables.com/id/Neopixel-Dome-Button/).  Each of these then has connections for: 5v power, ground, button sense, led drive, ring drive (5, with gnd going to several points)
 The smaller buttons were originally Adafruit buttons hacked to have a single neopixel inside. but these started failing after a few months use.  They also did not fit the acrylic top, so we changed over to use Ultimarc Ultralux arcade buttons with 5vdc leds. It required a couple extra lines but fit acrylic MUCH better and skipped need for more neopixels.
 
-My NeoEffects library is used to provide the blinky effects.  It also supports multiple effects in a single 'strip'.  We have 5 strips - 2 rings in player buttons, one strip around top edge, one each on left/right front vertical edges.
+My NeoEffects library (https://github.com/MauiJerry/NeoEffects_library) is used to provide the blinky effects.  It also supports multiple effects in a single 'strip'.  We have 5 strips - 2 rings in player buttons, one strip around top edge, one each on left/right front vertical edges.
 
 Audio is from Teensy's 12bit DAC on pin A14. It plays quite well and we only needed a couple simple sounds. This eliminated earlier use of the PJRC Audio board, or an SD card reader board.
 
