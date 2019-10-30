@@ -10,15 +10,15 @@
 #define MODE_PIX_PIN 8
 
 // top, left, right strips on RJ2
-#define TOP_STRIP_PIN 21
-#define LEFT_STRIP_PIN 5
-#define RIGHT_STRIP_PIN 6
+#define TOP_STRIP_PIN 5
+#define LEFT_STRIP_PIN 6
+#define RIGHT_STRIP_PIN 21
 
 #define TOP_STRIP_LEN 86
-#define TOP_LEFT_START 0
-#define TOP_LEFT_LEN  40
-#define TOP_RIGHT_START TOP_LEFT_LEN
-#define TOP_RIGHT_LEN 40
+#define TOP_LEFT_START TOP_RIGHT_LEN
+#define TOP_LEFT_LEN  43
+#define TOP_RIGHT_START 0
+#define TOP_RIGHT_LEN 43
 
 #define LEFT_STRIP_LEN 60
 #define RIGHT_STRIP_LEN LEFT_STRIP_LEN
@@ -36,22 +36,22 @@ NeoStrip player2Strip = NeoStrip(RING_LENGTH2, PLAYER2_RING_PIN, NEO_RGB + NEO_K
 NeoWindow player1Ring  = NeoWindow(&player1Strip, 0, RING_LENGTH1);
 NeoWindow player2Ring  = NeoWindow(&player2Strip, 0, RING_LENGTH2);//RING_LENGTH);
 
-#define STRIP_TYPE NEO_GRBW
+#define STRIP_TYPE (NEO_GRBW+ NEO_KHZ800)
 // using rgb+w strip from adafruit which should be RGBW
 // however the uberGuide says some may be GRBW
-NeoStrip topStrip = NeoStrip(TOP_STRIP_LEN, TOP_STRIP_PIN, STRIP_TYPE + NEO_KHZ800);
+NeoStrip topStrip = NeoStrip(TOP_STRIP_LEN, TOP_STRIP_PIN, STRIP_TYPE );
 NeoWindow topFullWindow  = NeoWindow(&topStrip, 0, TOP_STRIP_LEN);
-NeoWindow topLeftWindow  = NeoWindow(&topStrip, 0, TOP_LEFT_LEN);
+NeoWindow topLeftWindow  = NeoWindow(&topStrip, TOP_LEFT_START, TOP_LEFT_LEN);
 NeoWindow topRightWindow = NeoWindow(&topStrip, TOP_RIGHT_START, TOP_RIGHT_LEN);
 
-NeoStrip leftStrip = NeoStrip(LEFT_STRIP_LEN, LEFT_STRIP_PIN, STRIP_TYPE + NEO_KHZ800);
+NeoStrip leftStrip = NeoStrip(LEFT_STRIP_LEN, LEFT_STRIP_PIN, STRIP_TYPE);
 NeoWindow leftWindow  = NeoWindow(&leftStrip, 0, LEFT_STRIP_LEN);
 
-NeoStrip rightStrip = NeoStrip(RIGHT_STRIP_LEN, RIGHT_STRIP_PIN, STRIP_TYPE + NEO_KHZ800);
+NeoStrip rightStrip = NeoStrip(RIGHT_STRIP_LEN, RIGHT_STRIP_PIN, STRIP_TYPE );
 NeoWindow rightWindow  = NeoWindow(&rightStrip, 0, RIGHT_STRIP_LEN);
 
-// Mode Flora NeoPixels are just simple neopixels as we just do on/off in testModeColor
-Adafruit_NeoPixel modePixels = Adafruit_NeoPixel(3, MODE_PIX_PIN, NEO_GRB + NEO_KHZ800);
+// Oct 2019 - 3 mode pixels become separate LEDs on 3 separate pins
+// use modePixQuiet/Game/Dazzle() methods to activate
 
 void setupNeoPix() 
 {
@@ -63,7 +63,7 @@ void setupNeoPix()
   topStrip.begin();
   leftStrip.begin();
   rightStrip.begin();
-  modePixels.begin();
+  setupModePixels();
   
   Serial.printf("player1Strip id: %d\n", player1Strip.getId());
   Serial.printf("player2Strip id: %d\n", player2Strip.getId());
@@ -81,6 +81,14 @@ void setupNeoPix()
   setAllWindowsNoEfx();
 
 }
+
+void setupModePixels()
+{
+  pinMode(QUIET_PIXEL_PIN, OUTPUT);
+  pinMode(GAME_PIXEL_PIN, OUTPUT);
+  pinMode(DAZZLE_PIXEL_PIN, OUTPUT);
+}
+
 
 void setAllBrightness(int brightness)
 {
@@ -105,22 +113,44 @@ void setAllWindowsNoEfx()
 void modePixOn()
 {
 //  Serial.println("Mode Pix On");
-  //modePixels.setPixelColor(DEAD_PIXEL,  modePixels.Color(100,100,100));
-  modePixels.setPixelColor(QUIET_PIXEL,  modePixels.Color(255,0,0));
-  modePixels.setPixelColor(GAME_PIXEL,   modePixels.Color(0,255,0));
-  modePixels.setPixelColor(DAZZLE_PIXEL, modePixels.Color(0,0,255));
-  modePixels.show();
+
+    digitalWrite(QUIET_PIXEL_PIN, HIGH);
+    digitalWrite(GAME_PIXEL_PIN, HIGH);
+    digitalWrite(DAZZLE_PIXEL_PIN, HIGH);
+
 }
 
 void modePixOff()
 {
-//  Serial.println("Mode Pix Off");
-  //modePixels.setPixelColor(DEAD_PIXEL,  0);
-  modePixels.setPixelColor(QUIET_PIXEL,  0);
-  modePixels.setPixelColor(GAME_PIXEL,   0);
-  modePixels.setPixelColor(DAZZLE_PIXEL, 0);
-  modePixels.show();
+    digitalWrite(QUIET_PIXEL_PIN, LOW);
+    digitalWrite(GAME_PIXEL_PIN, LOW);
+    digitalWrite(DAZZLE_PIXEL_PIN, LOW);
 }
+
+void modePixQuiet()
+{
+  Serial.println("modePixQuiet");
+    digitalWrite(QUIET_PIXEL_PIN, HIGH);
+    digitalWrite(GAME_PIXEL_PIN, LOW);
+    digitalWrite(DAZZLE_PIXEL_PIN, LOW);
+}
+
+void modePixGame()
+{
+   Serial.println("modePixGame");
+   digitalWrite(QUIET_PIXEL_PIN, LOW);
+    digitalWrite(GAME_PIXEL_PIN, HIGH);
+    digitalWrite(DAZZLE_PIXEL_PIN, LOW);
+}
+
+void modePixDazzle()
+{
+  Serial.println("modePixDazzle");
+    digitalWrite(QUIET_PIXEL_PIN, LOW);
+    digitalWrite(GAME_PIXEL_PIN, LOW);
+    digitalWrite(DAZZLE_PIXEL_PIN, HIGH);
+}
+
 
 void showStrips()
 {
@@ -205,29 +235,7 @@ void blinkModePixels()
   delay(500);
 }
 
-void rampModePixels() 
-{
- Serial.println("rampModePixels - r, g, b");
- modePixels.setPixelColor(QUIET_PIXEL, modePixels.Color(testModeColor,0,0));
- modePixels.setPixelColor(GAME_PIXEL, modePixels.Color(0,testModeColor,0));
- modePixels.setPixelColor(DAZZLE_PIXEL, modePixels.Color(0,0,testModeColor));
- modePixels.show();
- delay(500);
- if (testModeDirection) {
-  testModeColor++;
-  if (testModeColor >255) {
-    Serial.println("Change to go Down");
-    testModeDirection = 0; 
-  }
- } else {
-  testModeColor --;
-  if (testModeColor < 0) {
-    Serial.println("Change to go UP");
-    testModeDirection = 1;
-  }
- }
- Serial.println("rampModePixels - done");
-}
+
 
 void updateAllWindows()
 {
@@ -247,5 +255,142 @@ void  showAllStrip()
   rightStrip.show();
   player1Strip.show();
   player2Strip.show();
-  modePixels.show();
+//  modePixels.show();
+}
+
+int dazzleTime = 60;
+int dazzelPercent = 70;
+
+int slowDazzleTime = 2000;
+int fastDazzleTime = 50;
+
+void  setQuietNeoEfx()
+{
+  topFullWindow.setDazzleEfx( slowDazzleTime, 50, 600);
+  topLeftWindow.setNoEfx();
+  topRightWindow.setNoEfx();
+
+  leftWindow.setDazzleEfx( slowDazzleTime, 50, 600);
+  rightWindow.setDazzleEfx( slowDazzleTime, 50, 600);
+  
+  // player buttons slow fade
+//  player1Ring.setFadeEfx(0, RED, 100, player1Ring.fadeTypeCycle, 600); // fade between two colors
+//  player2Ring.setFadeEfx(0, GREEN, 100, player2Ring.fadeTypeCycle, 600); // fade between two colors
+  player1Ring.setDazzleEfx( slowDazzleTime, 50, 600);
+  player2Ring.setDazzleEfx( slowDazzleTime, 50, 600);
+
+  // control buttons Quiet= full color
+  modePixQuiet();
+}
+
+void setGameNeoEfx()
+{
+  Serial.println("setGameNeoEfx");
+  setAllBrightness(BRIGHTNESS);
+  // long strips in slow dazzle
+//  int dazzleTime = 2000;
+//    setAllBrightness(100);
+  topFullWindow.setFadeEfx(0, BLUE, 100, topFullWindow.fadeTypeCycle, 600);
+  topLeftWindow.setNoEfx();
+  topRightWindow.setNoEfx();
+  leftWindow.setFadeEfx(0, BLUE, 100, topFullWindow.fadeTypeCycle, 600);
+  rightWindow.setFadeEfx(0, BLUE, 100, topFullWindow.fadeTypeCycle, 600);
+  
+  // player buttons solid color
+//  player1Ring.setMultiSparkleEfx(RED, 50, 50, player1Ring.getNumPixels()/2, 0); // fade between two colors
+//  player2Ring.setMultiSparkleEfx(BLUE, 50, 50, player2Ring.getNumPixels()/2, 0); // fade between two colors
+//  player1Ring.setSolidColorEfx(0, 600); 
+//  player2Ring.setSolidColorEfx(0, 600); 
+  player1Ring.setDazzleEfx( slowDazzleTime, 50, 600);
+  player2Ring.setDazzleEfx( slowDazzleTime, 50, 600);
+
+  // control buttons Quiet= full color
+  modePixGame();
+}
+
+void  setLeftNeoEfx()
+{
+  Serial.println("setLeftNeoEfx");
+  setAllBrightness(BRIGHTNESS);
+
+  topFullWindow.fillBlack();
+  topFullWindow.setNoEfx();
+  
+//  topLeftWindow.setWipeEfx(RED, 30,600);
+//  topLeftWindow.setSolidColorEfx(GREEN, 600);
+//  topRightWindow.setSolidColorEfx(RED, 600);
+
+  topLeftWindow.setDazzleEfx( dazzleTime, dazzelPercent, 50);
+  //topRightWindow.setSolidColorEfx(BLACK, 600);
+//  topRightWindow.fillBlack();
+  topRightWindow.setNoEfx();
+
+  topLeftWindow.printData();
+  topRightWindow.printData();
+    
+  // player buttons solid color
+  player1Ring.setDazzleEfx( dazzleTime, dazzelPercent, 75);//setBlinkEfx(RED, 100, 0); 
+  player2Ring.setSolidColorEfx(0, 5000);
+
+  // control buttons Quiet= full color
+  modePixGame();
+}
+
+void  setRightNeoEfx()
+{ 
+  Serial.println("setRightNeoEfx");
+  setAllBrightness(BRIGHTNESS);
+  // long strips in slow dazzle
+//  int dazzleTime = 2000;
+//    setAllBrightness(100);
+
+  topFullWindow.fillBlack();
+  topFullWindow.setNoEfx();
+  
+//  topLeftWindow.fillBlack();
+  topLeftWindow.setNoEfx();
+  topRightWindow.setDazzleEfx( dazzleTime, dazzelPercent, 50);
+
+  topLeftWindow.printData();
+  topRightWindow.printData();
+
+  leftWindow.setNoEfx();
+  leftWindow.fillBlack();
+  rightWindow.setDazzleEfx( dazzleTime, dazzelPercent, 50);
+//  rightWindow.setReverseWipeEfx(color, 30,600);
+//  rightWindow.setBlinkEfx(GREEN, 100, 0);
+  
+  // player buttons solid color
+  player1Ring.setSolidColorEfx(0, 5000); 
+  player2Ring.setDazzleEfx( dazzleTime, dazzelPercent, 75);
+//  player2Ring.setBlinkEfx(GREEN, 600);
+
+  // control buttons Quiet= full color
+  modePixGame();
+}
+
+void  setDazzleNeoEfx()
+{
+  Serial.println("setDazzleNeoEfx");
+  setAllBrightness(100);
+
+  topFullWindow.setDazzleEfx( dazzleTime, dazzelPercent, 50);
+  topLeftWindow.setNoEfx();
+  topRightWindow.setNoEfx();
+  leftWindow.setDazzleEfx( dazzleTime, dazzelPercent, 50);
+  rightWindow.setDazzleEfx( dazzleTime, dazzelPercent, 50);
+  
+  // player buttons solid color
+  player1Ring.setDazzleEfx( dazzleTime, dazzelPercent, 50); // fade between two colors
+  player2Ring.setDazzleEfx( dazzleTime, dazzelPercent, 50); // fade between two colors
+
+  // control buttons 
+    modePixDazzle();
+}
+
+void leftRightSolid()
+{
+  topFullWindow.fillBlack();
+  topRightWindow.fillColor(RED);
+  topLeftWindow.fillColor(GREEN);
 }

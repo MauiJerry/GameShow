@@ -1,6 +1,6 @@
 /*
  * GameShowTeensyAudio - game show using Teensy's DAC audio
-// oct 2019 - move 3 mode buttons to individula leds
+// oct 2019 - move 3 mode buttons to individual leds
 
 //  three mode push buttons (quiet, game, dazzle)
 //  Two buttons for participants
@@ -20,6 +20,7 @@
       
 
 //for NeoPixels
+uint32_t BLACK = Adafruit_NeoPixel::Color(0, 0, 0);
 uint32_t BLUE = Adafruit_NeoPixel::Color(0, 0, FULLON);
 uint32_t WHITE = Adafruit_NeoPixel::Color(FULLON, FULLON, FULLON, FULLON);
 uint32_t RED = Adafruit_NeoPixel::Color(FULLON, 0, 0);
@@ -33,9 +34,9 @@ uint32_t   ORANGE = Adafruit_NeoPixel::Color(FULLON, 128, 0);
 //////////////////////////
 
 void setup() {
-  delay(1000);
+  delay(500);
   Serial.begin(115200);
-  delay(500); // wait half sec to open serial monitor window
+  delay(800); // wait half sec to open serial monitor window
   Serial.println("Starting gameShow BtnTriggerEfx1");
 
   AudioInit();
@@ -54,10 +55,21 @@ void setup() {
 
  Serial.println("startup complete, now loop");
  setQuietState();
+
+ //TestTopHalves();
+}
+void  TestTopHalves()
+{
+  Serial.println("TestTopHalves");
+  leftRightSolid();
+  updateAllWindows();
+  showAllStrip();
+  delay(10000);
 }
 
 void loop()
 {
+  Serial.println("Loop"); //delay(500);
   // Basic NeoEffects loop:
   // update time
   // check inputs & effectsDone - change behavior as needed
@@ -69,7 +81,7 @@ void loop()
   {
     logButtons();
 
-     if (!mode1BtnValue)
+    if (!mode1BtnValue)
     {
       Serial.println("Mode1 Quiet Pressed");
       setQuietState();
@@ -85,10 +97,12 @@ void loop()
     { 
       if (player1BtnValue==0)
       {
-        setLeftState();
+        Serial.println("Player1 press => Right Game State");
+        setRightState();
       } else if (player2BtnValue ==0)
       {
-        setRightState();
+        Serial.println("Player2 press => Left Game State");
+        setLeftState();
       }      
     }
   }

@@ -5,11 +5,10 @@
 #include <NeoStrip.h>
 #include <NeoWindow.h>
 
-// mode buttons lit by chained Flora NeoPixels on RJ1
-// mode pixel numbers
-#define QUIET_PIXEL 2
-#define GAME_PIXEL 1
-#define DAZZLE_PIXEL 0
+// mode buttons are now separate regular leds on own pins
+#define QUIET_PIXEL_PIN 8
+#define GAME_PIXEL_PIN 14
+#define DAZZLE_PIXEL_PIN 20
 
 #define RING_LENGTH1 16
 #define RING_LENGTH2 12
@@ -32,15 +31,24 @@ extern NeoStrip player2Strip;
 extern NeoWindow player1Ring;
 extern NeoWindow player2Ring;
 
-// Mode Flora NeoPixels are just simple neopixels as we just do on/off in color
-extern Adafruit_NeoPixel modePixels;
 
 extern void startupBlinks();
 extern void allOn(); 
 extern void allOff(); 
 extern void modePixOff();
 extern void modePixOn();
-extern void setupNeoPix(); 
+extern void setupNeoPix();
+
+extern void modePixQuiet();
+extern void modePixGame();
+extern void modePixDazzle();
+
+extern void  setQuietNeoEfx();
+extern void  setGameNeoEfx();
+extern void  setLeftNeoEfx();
+extern void  setRightNeoEfx();
+extern void  setDazzleNeoEfx();
+extern void leftRightSolid();
 
 extern void showAllStrip();
 extern void blinkModePixels();
